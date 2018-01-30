@@ -14,6 +14,8 @@
 	#define BLOCK_SIZE sizeof(struct s_block)
 	#define METADATA_SIZE (BLOCK_SIZE - 1)
 
+extern void *base_list_g;
+
 typedef struct s_block *t_block;
 
 struct s_block {
@@ -24,8 +26,11 @@ struct s_block {
 	char data[1];
 };
 
-t_block find_block(size_t size);
+t_block find_block(t_block *last, size_t size);
 void show_alloc_mem();
+void my_putnbr(unsigned long nbr);
+void my_putstr(char *str);
+int print_address_in_hexa(unsigned long long int ptr);
 
 /*
 ** This function will enter in your mom
