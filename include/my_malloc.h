@@ -23,6 +23,7 @@ struct s_block {
 };
 
 t_block find_block(size_t size);
+void show_alloc_mem();
 
 /*
 ** This global variable point to the first block of the RAM of the
