@@ -29,7 +29,7 @@ void show_alloc_mem();
 ** This global variable point to the first block of the RAM of the
 ** program.
 */
-extern t_block base;
+void *base = NULL;
 
 	/*
 	** the size of the struct.

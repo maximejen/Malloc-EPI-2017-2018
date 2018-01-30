@@ -55,7 +55,7 @@ void show_alloc_mem()
 
 	if (!breakPoint)
 		return;
-	printf("break : %p\n", sbrk(0));
+	printf("break : %p\n", breakPoint);
 	while (tmp) {
 		if (tmp->free == 0) {
 			printf("%p - %p : %lu bytes\n", (void *)tmp->data,

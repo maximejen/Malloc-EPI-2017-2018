@@ -16,15 +16,15 @@ int main()
 	void *(*my_malloc)(size_t);
 	char *error;
 
-	handle = dlopen("/home/benjamin/Dropbox/PSU_2017_malloc/cmake-build-debug/libmy_malloc.so", RTLD_LAZY);
+	handle = dlopen("./libmy_malloc.so", RTLD_LAZY);
 	if (!handle){
-		printf("lol\n");
+		printf("cannot open lib\n");
 		return (84);
 	}
 	dlerror();
 	*(void **)(&my_malloc) = dlsym(handle, "my_malloc");
 	if ((error = dlerror()) != NULL){
-		printf("Non\n");
+		printf("Error\n");
 		return (84);
 	}
 	dlclose(handle);
