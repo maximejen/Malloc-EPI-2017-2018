@@ -27,7 +27,7 @@ void show_alloc_mem();
 
 /*
 ** This global variable point to the first block of the RAM of the
-** program. Test
+** program.
 */
 void *base = NULL;
 
