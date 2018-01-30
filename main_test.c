@@ -31,6 +31,7 @@ int main()
 		printf("Error\n");
 		return (84);
 	}
+	my_malloc(12);
 	dlclose(handle);
 	printf("No errors appened, everything works perfectly\n");
 	return (0);
