@@ -10,20 +10,29 @@
 
 	#include <stddef.h>
 
-#define align8(x) (((((x)-1)>>3)<<3)+8)
+#define align8(x) (((((x) - 1) >> 3) << 3) + 8)
 
 typedef struct s_block *t_block;
 
 struct s_block {
 	size_t size;
 	t_block next;
+	t_block previous;
 	int free;
 	char data[1];
 };
 
+t_block find_block(size_t size);
+
 /*
-** the size of the struct.
+** This global variable point to the first block of the RAM of the
+** program.
 */
+extern t_block base;
+
+	/*
+	** the size of the struct.
+	*/
 	#define META_DATA_SIZE 12;
 
 #endif //PSU_2017_MALLOC_MY_MALLOC_H_
