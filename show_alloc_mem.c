@@ -26,7 +26,7 @@ int print_address_in_hexa(unsigned long long int ptr)
 	return (size + 1);
 }
 
-void my_putnbr(size_t nbr)
+void my_putnbr(long long int nbr)
 {
 	char tmp;
 
@@ -55,17 +55,17 @@ void show_alloc_mem()
 		return;
 	my_putstr("break : ");
 	write(1, "0x", 2);
-	print_address_in_hexa(breakPoint);
+	print_address_in_hexa((unsigned long long int)breakPoint);
 	my_putstr("\n");
 	while (tmp) {
 		if (tmp->free == 0) {
 			write(1, "0x", 2);
-			print_address_in_hexa(tmp->data);
+			print_address_in_hexa((unsigned long long int)tmp->data);
 			my_putstr(" - ");
 			write(1, "0x", 2);
-			print_address_in_hexa(tmp->next);
+			print_address_in_hexa((unsigned long long int)tmp->next);
 			my_putstr(" : ");
-			my_putnbr(tmp->size);
+			my_putnbr((long long int)tmp->size);
 			my_putstr(" bytes\n");
 		}
 		tmp = tmp->next;
