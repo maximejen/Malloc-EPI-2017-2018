@@ -5,6 +5,7 @@
 ** my_malloc.c
 */
 
+#include <stdio.h>
 #include "my_malloc.h"
 
 /*
@@ -44,4 +45,10 @@ t_block extend_heap_usage(t_block list, size_t s)
 void split_block(t_block b, size_t s)
 {
 
+}
+
+
+void *my_malloc(size_t size)
+{
+	printf("Enter my malloc\n");
 }

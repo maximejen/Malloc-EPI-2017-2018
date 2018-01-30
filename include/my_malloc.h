@@ -35,4 +35,6 @@ extern t_block base;
 	*/
 	#define META_DATA_SIZE 12;
 
+void *my_malloc(size_t size);
+
 #endif //PSU_2017_MALLOC_MY_MALLOC_H_
