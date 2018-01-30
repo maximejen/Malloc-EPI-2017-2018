@@ -37,7 +37,7 @@ t_block find_block(size_t size)
 */
 t_block extend_heap_usage(t_block list, size_t s)
 {
-
+	(void)s;
 }
 
 void split_block(t_block b, size_t s)
