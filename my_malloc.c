@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <zconf.h>
+#include <errno.h>
 #include "my_malloc.h"
 
 /*
@@ -39,13 +40,31 @@ t_block find_block(size_t size)
 */
 t_block extend_heap_usage(t_block list, size_t s)
 {
-	(void)s;
-	(void)list;
+	t_block block = sbrk(0);
+
+	if(sbrk(BLOCK_SIZE + s) == (void*)-1){
+		printf("%d\n", errno);
+		return (NULL);
+	}
+	block->next = NULL;
+	block->prev = list;
+	block->size = s;
+	block->free = 0;
+	if (list)
+		list->next = block;
+	return (block);
 }
 
-void split_block(t_block b, size_t s)
+void cut_block(t_block b, size_t s)
 {
+	t_block free_space = b + s + BLOCK_SIZE;
 
+	free_space->next = b->next;
+	free_space->prev = b;
+	b->next = free_space;
+	free_space->size = b->size - BLOCK_SIZE - s;
+	free_space->free = 1;
+	b->size = s;
 }
 
 void show_alloc_mem()
