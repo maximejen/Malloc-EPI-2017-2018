@@ -6,6 +6,7 @@
 */
 
 #include <stdio.h>
+#include <zconf.h>
 #include "my_malloc.h"
 
 /*
@@ -45,6 +46,23 @@ t_block extend_heap_usage(t_block list, size_t s)
 void split_block(t_block b, size_t s)
 {
 
+}
+
+void show_alloc_mem()
+{
+	t_block tmp = base;
+	void *breakPoint = sbrk(0);
+
+	if (!breakPoint)
+		return;
+	printf("break : %p\n", sbrk(0));
+	while (tmp) {
+		if (tmp->free == 0) {
+			printf("%p - %p : %lu bytes\n", (void *)tmp->data,
+			       tmp->next, tmp->size);
+		}
+		tmp = tmp->next;
+	}
 }
 
 
