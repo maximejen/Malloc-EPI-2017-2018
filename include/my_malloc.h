@@ -5,14 +5,14 @@
 ** my_malloc.h
 */
 
-#ifndef PSU_2017_MALLOC_MY_MALLOC_H_
-	#define PSU_2017_MALLOC_MY_MALLOC_H_
+#ifndef MY_MALLOC_H_
+	#define MY_MALLOC_H_
 
 	#include <stddef.h>
 
-#define align8(x) (((((x) - 1) >> 3) << 3) + 8)
-#define BLOCK_SIZE sizeof(struct s_block)
-#define METADATA_SIZE (BLOCK_SIZE - 1)
+	#define align8(x) (((((x) - 1) >> 3) << 3) + 8)
+	#define BLOCK_SIZE sizeof(struct s_block)
+	#define METADATA_SIZE (BLOCK_SIZE - 1)
 
 typedef struct s_block *t_block;
 
@@ -26,13 +26,6 @@ struct s_block {
 
 t_block find_block(size_t size);
 void show_alloc_mem();
-
-/*
-** This global variable point to the first block of the RAM of the
-** program.
-*/
-void *base = NULL;
-
 
 /*
 ** This function will enter in your mom
