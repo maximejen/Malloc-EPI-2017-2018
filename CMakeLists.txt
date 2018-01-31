@@ -9,6 +9,7 @@ set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -ldl -W -Wall -Wextra")
 set(lib_sources
         my_malloc.c
         my_free.c
+        my_realloc.c
         show_alloc_mem.c
         include/my_malloc.h)
 

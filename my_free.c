@@ -19,7 +19,7 @@ static t_block merge_block(t_block ptr)
 	return (ptr);
 }
 
-static int valid_ptr(void *ptr)
+int valid_ptr(void *ptr)
 {
 	int res = 0;
 
@@ -35,7 +35,7 @@ static void end_of_the_heap(t_block ptr)
 	sbrk((intptr_t)ptr);
 }
 
-static t_block get_block(void *ptr)
+t_block get_block(void *ptr)
 {
 	t_block tmp = ptr;
 
