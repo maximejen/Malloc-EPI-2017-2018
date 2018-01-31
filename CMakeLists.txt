@@ -8,9 +8,9 @@ set(CMAKE_EXE_LINKER_FLAGS -lcriterion)
 set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -ldl -W -Wall -Wextra")
 set(lib_sources
         my_malloc.c
-        include/my_malloc.h
+        my_free.c
         show_alloc_mem.c
-        my_free.c)
+        include/my_malloc.h)
 
 add_library(my_malloc SHARED ${lib_sources})
 
