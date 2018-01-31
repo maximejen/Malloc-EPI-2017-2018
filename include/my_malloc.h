@@ -34,7 +34,7 @@ int print_address_in_hexa(unsigned long long int ptr);
 
 /*
 ** This function will enter in your mom
-*/
+*/ 
 void cut_block(t_block b, size_t s);
 
 /*
@@ -44,5 +44,6 @@ void cut_block(t_block b, size_t s);
 t_block extend_heap_usage(t_block list, size_t s);
 
 void *my_malloc(size_t size);
+void my_free(t_block ptr);
 
 #endif

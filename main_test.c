@@ -13,8 +13,10 @@ int main()
 {
 	void *handle;
 	void *(*my_malloc)(size_t);
+	void *(*my_free)(void *ptr);
 	char *error;
 	char *errstr;
+	void *ptr;
 
 	handle = dlopen("./libmy_malloc.so", RTLD_LAZY);
 	errstr = dlerror();
@@ -26,11 +28,13 @@ int main()
 	}
 	dlerror();
 	*(void **)(&my_malloc) = dlsym(handle, "my_malloc");
+	*(void **)(&my_free) = dlsym(handle, "my_free");
 	if ((error = dlerror()) != NULL){
 		printf("Error\n");
 		return (84);
 	}
-	my_malloc(12);
+	ptr = my_malloc(12);
+	my_free(ptr);
 	dlclose(handle);
 	printf("No errors appened, everything works perfectly\n");
 	return (0);

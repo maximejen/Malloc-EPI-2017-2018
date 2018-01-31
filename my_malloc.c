@@ -31,7 +31,6 @@ void *base_list_g = NULL;
 t_block find_block(t_block *last, size_t size)
 {
 	t_block tmp = base_list_g;
-
 	while (tmp != NULL) {
 		if (tmp->free == 1 && tmp->size >= size)
 			return (tmp);
@@ -53,17 +52,14 @@ t_block find_block(t_block *last, size_t size)
 t_block extend_heap_usage(t_block list, size_t s)
 {
 	t_block block = sbrk(0);
-
 	my_putstr("=== extend the heap usage ===\n");
-	if(sbrk(BLOCK_SIZE + s) == (void*)-1)
+	if (sbrk(BLOCK_SIZE + s) == (void *)-1)
 		return (NULL);
-
 	my_putstr("apparently, you just allocated ");
 	my_putnbr(BLOCK_SIZE + s);
 	my_putstr(" bytes.\nat : ");
 	print_address_in_hexa((unsigned long long int)block);
 	my_putstr("\n");
-
 	block->size = s;
 	block->next = NULL;
 	block->prev = list;
@@ -100,7 +96,6 @@ void *malloc(size_t size)
 	t_block list = base_list_g;
 	size = align8(size);
 	my_putstr("======== Entering My malloc ========\n");
-
 	if (list != NULL) {
 		my_putstr("base is defined\n");
 		my_putstr("size of base : ");
@@ -114,8 +109,7 @@ void *malloc(size_t size)
 			if (alloc->size - size >= BLOCK_SIZE + 8)
 				cut_block(alloc, size);
 			alloc->free = 0;
-		}
-		else {
+		} else {
 			my_putstr("Did not found a block wide enough\n");
 			my_putstr("=========== address of list element : ");
 			print_address_in_hexa((unsigned long long int)list);
@@ -124,8 +118,7 @@ void *malloc(size_t size)
 			if (!alloc)
 				return (NULL);
 		}
-	}
-	else {
+	} else {
 		my_putstr("base is not defined, define it\n");
 		alloc = extend_heap_usage(list, size);
 		base_list_g = alloc;
@@ -134,8 +127,45 @@ void *malloc(size_t size)
 	return (alloc);
 }
 
-void free(void *ptr)
+static t_block merge_block(t_block ptr)
 {
-	(void)ptr;
-	return;
+	if (ptr->next && ptr->next->free) {
+		ptr->size += BLOCK_SIZE + ptr->next->size;
+		ptr->next = ptr->next->next;
+		if (ptr->next)
+			ptr->next->prev = ptr;
+	}
+	return (ptr);
+}
+
+static int valid_ptr(void *ptr)
+{
+	int res = 0;
+
+	if (base_list_g && (ptr > base_list_g && ptr < sbrk(0)))
+		res = 1;
+	return (res);
+}
+
+static void endOfTheHeap(t_block ptr)
+{
+	if (ptr->prev)
+		ptr->prev->next = NULL;
+	else
+		base_list_g = NULL;
+	sbrk((intptr_t)ptr);
+}
+
+void my_free(t_block ptr)
+{
+	if (!valid_ptr)
+		return;
+	t_block tmp = (ptr -= BLOCK_SIZE);
+	tmp->free = 1;
+	if (tmp->prev && tmp->prev->free)
+		tmp = merge_block(tmp->prev);
+	if (tmp->next)
+		tmp = merge_block(tmp->next);
+	else
+		endOfTheHeap(tmp);
 }
