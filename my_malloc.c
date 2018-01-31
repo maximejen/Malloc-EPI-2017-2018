@@ -83,20 +83,28 @@ void *malloc(size_t size)
 	t_block list = base_list_g;
 	size = align(size);
 
+	my_putstr("asked size : ");
+	my_putnbr((long long int)size);
+	my_putstr(" bytes.\n");
 	if (list != NULL) {
 		alloc = find_block(&list, size);
 		if (alloc != NULL) {
-			my_putstr("a block was found\n");
-			if (alloc->size - size >= MINSIZE)
+			my_putstr("A BLOCK HAS BEEN FOUND\n");
+			if (alloc->size - size >= MINSIZE) {
 				cut_block(alloc, size);
+			}
 			alloc->free = 0;
 		}
-		else
+		else {
+			my_putstr("NO BLOCK FOUND\n");
 			alloc = extend_heap_usage(list, size);
+			if (!alloc)
+				return (NULL);
+		}
 	}
 	else {
 		alloc = extend_heap_usage(list, size);
 		base_list_g = alloc;
 	}
-	return (alloc->data);
+	return ((void *)alloc + BLOCK_SIZE);
 }
