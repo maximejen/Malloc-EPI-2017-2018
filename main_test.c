@@ -11,14 +11,16 @@
 
 int main()
 {
+	void *ptr;
 	void *handle;
+	void *handle2;
 	void *(*my_malloc)(size_t);
 	void *(*my_free)(void *ptr);
 	char *error;
 	char *errstr;
-	void *ptr;
 
 	handle = dlopen("./libmy_malloc.so", RTLD_LAZY);
+	handle2 = dlopen("./libmy_malloc.so", RTLD_LAZY);
 	errstr = dlerror();
 	if (errstr != NULL)
 		printf ("A dynamic linking error occurred: (%s)\n", errstr);
@@ -28,7 +30,7 @@ int main()
 	}
 	dlerror();
 	*(void **)(&my_malloc) = dlsym(handle, "my_malloc");
-	*(void **)(&my_free) = dlsym(handle, "my_free");
+	*(void **)(&my_free) = dlsym(handle2, "my_free");
 	if ((error = dlerror()) != NULL){
 		printf("Error\n");
 		return (84);
