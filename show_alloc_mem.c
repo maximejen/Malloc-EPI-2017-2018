@@ -6,7 +6,6 @@
 */
 
 #include <unistd.h>
-#include <stdio.h>
 #include "my_malloc.h"
 
 int print_address_in_hexa(unsigned long long int ptr)
@@ -19,7 +18,7 @@ int print_address_in_hexa(unsigned long long int ptr)
 		size = print_address_in_hexa(ptr / 16);
 	nbr2 = ptr % 16;
 	if (nbr2 >= 10 && nbr2 <= 15)
-		nbrc = (char)(nbr2 + 55 + 32);
+		nbrc = (char)(nbr2 + 55);
 	else
 		nbrc = (char)(nbr2 + '0');
 	write(1, &nbrc, 1);
@@ -60,10 +59,10 @@ void show_alloc_mem()
 	while (tmp) {
 		if (tmp->free == 0) {
 			write(1, "0x", 2);
-			print_address_in_hexa((unsigned long long int)tmp->data);
+			print_address_in_hexa((unsigned long long int)tmp);
 			my_putstr(" - ");
 			write(1, "0x", 2);
-			print_address_in_hexa((unsigned long long int)tmp->next);
+			print_address_in_hexa((unsigned long long int)tmp->data + tmp->size);
 			my_putstr(" : ");
 			my_putnbr((long long int)tmp->size);
 			my_putstr(" bytes\n");

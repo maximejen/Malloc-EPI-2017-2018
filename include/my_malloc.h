@@ -10,18 +10,19 @@
 
 	#include <stddef.h>
 
-	#define align8(x) (((((x) - 1) >> 3) << 3) + 8)
+	#define align(x) (((((x) - 1) >> 2) << 2) + 4)
 	#define BLOCK_SIZE sizeof(struct s_block)
-	#define METADATA_SIZE (BLOCK_SIZE - 1)
+	#define META_DATA_SIZE BLOCK_SIZE
+	#define MINSIZE (BLOCK_SIZE + 4)
 
 extern void *base_list_g;
 
 typedef struct s_block *t_block;
 
 struct s_block {
-	size_t size;
 	t_block next;
 	t_block prev;
+	size_t size;
 	int free;
 	char data[1];
 };

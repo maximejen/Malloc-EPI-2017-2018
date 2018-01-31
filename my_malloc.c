@@ -31,13 +31,13 @@ void *base_list_g = NULL;
 t_block find_block(t_block *last, size_t size)
 {
 	t_block tmp = base_list_g;
-	while (tmp != NULL) {
-		if (tmp->free == 1 && tmp->size >= size)
+	while (tmp) {
+		if (tmp->free && tmp->size >= size)
 			return (tmp);
 		*last = tmp;
 		tmp = tmp->next;
 	}
-	return tmp;
+	return (tmp);
 }
 
 /*
@@ -52,14 +52,9 @@ t_block find_block(t_block *last, size_t size)
 t_block extend_heap_usage(t_block list, size_t s)
 {
 	t_block block = sbrk(0);
-	my_putstr("=== extend the heap usage ===\n");
-	if (sbrk(BLOCK_SIZE + s) == (void *)-1)
+
+	if(sbrk(BLOCK_SIZE + s) == (void*)-1)
 		return (NULL);
-	my_putstr("apparently, you just allocated ");
-	my_putnbr(BLOCK_SIZE + s);
-	my_putstr(" bytes.\nat : ");
-	print_address_in_hexa((unsigned long long int)block);
-	my_putstr("\n");
 	block->size = s;
 	block->next = NULL;
 	block->prev = list;
@@ -71,21 +66,13 @@ t_block extend_heap_usage(t_block list, size_t s)
 
 void cut_block(t_block b, size_t s)
 {
-	my_putstr("Cuting the block found if possible\n");
-	t_block free_space = (t_block)(b->data + s);
+	t_block free_space;
+
+	free_space = (t_block)(b->data + s);
 	free_space->next = b->next;
 	free_space->prev = b;
 	b->next = free_space;
-	my_putstr("when cut, s is : ");
-	my_putnbr((long long int)s);
-	my_putstr("\n");
-	my_putstr("when cut, size of b is : ");
-	my_putnbr((long long int)b->size);
-	my_putstr("\n");
 	free_space->size = b->size - BLOCK_SIZE - s;
-	my_putstr("when cut, size of free_space is : ");
-	my_putnbr((long long int)free_space->size);
-	my_putstr("\n");
 	free_space->free = 1;
 	b->size = s;
 }
@@ -94,78 +81,67 @@ void *malloc(size_t size)
 {
 	t_block alloc;
 	t_block list = base_list_g;
-	size = align8(size);
-	my_putstr("======== Entering My malloc ========\n");
+	size = align(size);
+
 	if (list != NULL) {
-		my_putstr("base is defined\n");
-		my_putstr("size of base : ");
-		my_putnbr((long long int)list->size);
-		my_putstr(" bytes.\naddress of base is : ");
-		print_address_in_hexa((unsigned long long int)list);
-		my_putstr("\n");
 		alloc = find_block(&list, size);
 		if (alloc != NULL) {
-			my_putstr("Found a block wide enough\n");
-			if (alloc->size - size >= BLOCK_SIZE + 8)
+			my_putstr("a block was found\n");
+			if (alloc->size - size >= MINSIZE)
 				cut_block(alloc, size);
 			alloc->free = 0;
-		} else {
-			my_putstr("Did not found a block wide enough\n");
-			my_putstr("=========== address of list element : ");
-			print_address_in_hexa((unsigned long long int)list);
-			my_putstr("\n");
-			alloc = extend_heap_usage(list, size);
-			if (!alloc)
-				return (NULL);
 		}
-	} else {
-		my_putstr("base is not defined, define it\n");
+		else
+			alloc = extend_heap_usage(list, size);
+	}
+	else {
 		alloc = extend_heap_usage(list, size);
 		base_list_g = alloc;
 	}
-	show_alloc_mem();
-	return (alloc);
+	return (alloc->data);
 }
 
-static t_block merge_block(t_block ptr)
-{
-	if (ptr->next && ptr->next->free) {
-		ptr->size += BLOCK_SIZE + ptr->next->size;
-		ptr->next = ptr->next->next;
-		if (ptr->next)
-			ptr->next->prev = ptr;
-	}
-	return (ptr);
-}
-
-static int valid_ptr(void *ptr)
-{
-	int res = 0;
-
-	if (base_list_g && (ptr > base_list_g && ptr < sbrk(0)))
-		res = 1;
-	return (res);
-}
-
-static void endOfTheHeap(t_block ptr)
-{
-	if (ptr->prev)
-		ptr->prev->next = NULL;
-	else
-		base_list_g = NULL;
-	sbrk((intptr_t)ptr);
-}
-
-void my_free(t_block ptr)
-{
-	if (!valid_ptr)
-		return;
-	t_block tmp = (ptr -= BLOCK_SIZE);
-	tmp->free = 1;
-	if (tmp->prev && tmp->prev->free)
-		tmp = merge_block(tmp->prev);
-	if (tmp->next)
-		tmp = merge_block(tmp->next);
-	else
-		endOfTheHeap(tmp);
-}
+//t_block merge_block(t_block ptr)
+//{
+//	(void)ptr;
+//	if (ptr->next && ptr->next->free) {
+//		ptr->size += BLOCK_SIZE + ptr->next->size;
+//		ptr->next = ptr->next->next;
+//		if (ptr->next)
+//			ptr->next->prev = ptr;
+//	}
+//	return (ptr);
+//}
+//
+//int valid_ptr(void *ptr)
+//{
+//	int res = 0;
+//
+//	if (base_list_g && (ptr > base_list_g && ptr < sbrk(0)))
+//		res = 1;
+//	return (res);
+//}
+//
+//void endOfTheHeap(t_block ptr)
+//{
+//	if (ptr->prev)
+//		ptr->prev->next = NULL;
+//	else
+//		base_list_g = NULL;
+//	sbrk((intptr_t)ptr);
+//}
+//
+//void free(t_block ptr)
+//{
+//	if (!valid_ptr(ptr))
+//		return;
+//	t_block tmp = (ptr -= BLOCK_SIZE);
+//
+//	tmp->free = 1;
+//	if (tmp->prev && tmp->prev->free)
+//		tmp = merge_block(tmp->prev);
+//	if (tmp->next)
+//		tmp = merge_block(tmp->next);
+//	else
+//		endOfTheHeap(tmp);
+//}
