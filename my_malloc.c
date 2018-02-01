@@ -66,7 +66,7 @@ t_block extend_heap_usage(t_block list, size_t s)
 void cut_block(t_block b, size_t s)
 {
 	t_block free_space;
-	free_space = (t_block)(b->data + s);
+	free_space = (t_block)((void *)b + BLOCK_SIZE + s);
 	free_space->next = b->next;
 	free_space->prev = b;
 	b->next = free_space;
@@ -80,19 +80,13 @@ void *malloc(size_t size)
 	t_block alloc;
 	t_block list = base_list_g;
 	size = align(size);
-	my_putstr("asked size : ");
-	my_putnbr((long long int)size);
-	my_putstr(" bytes.\n");
 	if (list != NULL) {
 		alloc = find_block(&list, size);
 		if (alloc != NULL) {
-			my_putstr("A BLOCK HAS BEEN FOUND\n");
-			if (alloc->size - size >= MINSIZE) {
+			if (alloc->size - size >= MINSIZE)
 				cut_block(alloc, size);
-			}
 			alloc->free = 0;
 		} else {
-			my_putstr("NO BLOCK FOUND\n");
 			alloc = extend_heap_usage(list, size);
 			if (!alloc)
 				return (NULL);

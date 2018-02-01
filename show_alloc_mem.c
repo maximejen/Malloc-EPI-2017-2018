@@ -69,16 +69,6 @@ void show_alloc_mem()
 			my_putnbr((long long int)tmp->size);
 			my_putstr(" bytes\n");
 		}
-		else {
-			write(1, "0x", 2);
-			print_address_in_hexa((size_t)tmp + BLOCK_SIZE);
-			my_putstr(" - ");
-			write(1, "0x", 2);
-			print_address_in_hexa((size_t)tmp + BLOCK_SIZE + tmp->size);
-			my_putstr(" : ");
-			my_putnbr((long long int)tmp->size);
-			my_putstr(" freed bytes\n");
-		}
 		tmp = tmp->next;
 	}
 }

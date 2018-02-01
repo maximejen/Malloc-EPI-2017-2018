@@ -12,7 +12,6 @@
 
 	#define align(x) (((((x) - 1) >> 2) << 2) + 4)
 	#define BLOCK_SIZE sizeof(struct s_block)
-	#define META_DATA_SIZE BLOCK_SIZE
 	#define MINSIZE (BLOCK_SIZE + 4)
 
 extern void *base_list_g;

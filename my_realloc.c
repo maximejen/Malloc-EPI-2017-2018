@@ -24,7 +24,7 @@ void *realloc(void *ptr, size_t size)
 	else if (valid_ptr(ptr)) {
 		t_block block = get_block(ptr);
 		if (block->size >= align(size) &&
-			(block->size - size) >= (BLOCK_SIZE + 8))
+			(block->size - size) >= MINSIZE)
 			cut_block(block, align(size));
 		else {
 			void *tmp = malloc(size);

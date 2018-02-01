@@ -51,16 +51,10 @@ void free(void *ptr)
 		return;
 	tmp = get_block(ptr);
 	tmp->free = 1;
-	my_putstr("=== MEM BEFORE MERGE ===\n");
-	show_alloc_mem();
-	my_putstr("=== MEM BEFORE MERGE ===\n");
 	if (tmp->prev && tmp->prev->free)
 		tmp = merge_block(tmp->prev);
 	if (tmp->next)
-		tmp = merge_block(tmp->next);
+		tmp = merge_block(tmp);
 	else
 		end_of_the_heap(tmp);
-	my_putstr("=== MEM AFTER MERGE ===\n");
-	show_alloc_mem();
-	my_putstr("=== MEM AFTER MERGE ===\n");
 }
