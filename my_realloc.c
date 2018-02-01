@@ -10,10 +10,14 @@
 
 static void copy_block(t_block src, t_block dest)
 {
+	int *sdata;
+	int *ddata;
 	size_t i = 0;
 
-	for (; i * 8 < src->size && i * 8 < dest->size; i++)
-		dest->data[i] = src->data[i];
+	sdata = (int *)get_block(src);
+	ddata = (int *)get_block(dest);
+	for (; i * 4 < src->size && i * 4 < dest->size ; i++)
+		sdata[i] = ddata[i];
 }
 
 void *realloc(void *ptr, size_t size)
@@ -22,19 +26,25 @@ void *realloc(void *ptr, size_t size)
 	if (!ptr)
 		ret = malloc(size);
 	else if (valid_ptr(ptr)) {
-		t_block block = get_block(ptr);
-		if (block->size >= align(size) &&
-			(block->size - size) >= MINSIZE)
-			cut_block(block, align(size));
-		else {
-			void *tmp = malloc(size);
-			if (tmp) {
-				t_block new = get_block(tmp);
-				copy_block(block, new);
-				free(block);
-				ret = new;
+		t_block b = get_block(ptr);
+		if (b->size >= align(size) && (b->size - size) >= MINSIZE) {
+			cut_block(b, align(size));
+			ret = (void *)b + BLOCK_SIZE;
+		} else {
+			ret = malloc(size);
+			if (ret) {
+				t_block new = get_block(ret);
+				copy_block(b, new);
+				free(b);
 			}
 		}
 	}
+	my_putstr("=== MEM AT END REALLOC ===\n");
+	show_alloc_mem();
+	my_putstr("=== MEM AT END REALLOC ===\n");
+	my_putstr("return this address by realloc : ");
+	print_address_in_hexa(
+	(unsigned long long int)(ret + BLOCK_SIZE));
+	my_putstr("\n");
 	return (ret);
 }

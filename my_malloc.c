@@ -77,6 +77,9 @@ void cut_block(t_block b, size_t s)
 
 void *malloc(size_t size)
 {
+	my_putstr("=== MEM AT BEGIN MALLOC ===\n");
+	show_alloc_mem();
+	my_putstr("=== MEM AT BEGIN MALLOC ===\n");
 	t_block alloc;
 	t_block list = base_list_g;
 	size = align(size);
@@ -92,8 +95,23 @@ void *malloc(size_t size)
 				return (NULL);
 		}
 	} else {
-		alloc = extend_heap_usage(list, size);
+		alloc = extend_heap_usage(NULL, size);
 		base_list_g = alloc;
 	}
+	my_putstr("=== MEM AT END MALLOC ===\n");
+	show_alloc_mem();
+	my_putstr("=== MEM AT END MALLOC ===\n");
+	my_putstr("return this address by malloc : ");
+	print_address_in_hexa(
+	(unsigned long long int)((void *)alloc + BLOCK_SIZE));
+	my_putstr("\n");
 	return ((void *)alloc + BLOCK_SIZE);
+}
+
+void *calloc(size_t nmemb, size_t size)
+{
+	my_putstr("JE SUIS UN FILS DE PUTE QUI UTILISE CALLOC\n");
+	(void)nmemb;
+	(void)size;
+	return (NULL);
 }
