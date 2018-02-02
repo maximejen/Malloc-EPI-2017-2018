@@ -75,6 +75,18 @@ void cut_block(t_block b, size_t s)
 	b->size = s;
 }
 
+void *calloc(size_t nmemb, size_t size)
+{
+	size_t *block_ptr = malloc(nmemb * size);
+
+	if (block_ptr) {
+	size_t max = align(nmemb * size) / 4;
+		for (unsigned int i = 0; i < max; ++i)
+			block_ptr[i] = 0;
+	}
+	return (block_ptr);
+}
+
 void *malloc(size_t size)
 {
 	my_putstr("=== MEM AT BEGIN MALLOC ===\n");
@@ -103,15 +115,7 @@ void *malloc(size_t size)
 	my_putstr("=== MEM AT END MALLOC ===\n");
 	my_putstr("return this address by malloc : ");
 	print_address_in_hexa(
-	(unsigned long long int)((void *)alloc + BLOCK_SIZE));
+		(unsigned long long int)((void *)alloc + BLOCK_SIZE));
 	my_putstr("\n");
 	return ((void *)alloc + BLOCK_SIZE);
-}
-
-void *calloc(size_t nmemb, size_t size)
-{
-	my_putstr("JE SUIS UN FILS DE PUTE QUI UTILISE CALLOC\n");
-	(void)nmemb;
-	(void)size;
-	return (NULL);
 }
