@@ -14,8 +14,8 @@ static void copy_block(t_block src, t_block dest)
 	int *ddata;
 	size_t i = 0;
 
-	sdata = (int *)get_block(src);
-	ddata = (int *)get_block(dest);
+	sdata = (int *)src;
+	ddata = (int *)dest;
 	for (; i * 4 < src->size && i * 4 < dest->size ; i++)
 		sdata[i] = ddata[i];
 }
@@ -39,12 +39,5 @@ void *realloc(void *ptr, size_t size)
 			}
 		}
 	}
-	my_putstr("=== MEM AT END REALLOC ===\n");
-	show_alloc_mem();
-	my_putstr("=== MEM AT END REALLOC ===\n");
-	my_putstr("return this address by realloc : ");
-	print_address_in_hexa(
-	(unsigned long long int)(ret + BLOCK_SIZE));
-	my_putstr("\n");
 	return (ret);
 }

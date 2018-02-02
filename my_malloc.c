@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <zconf.h>
+#include <string.h>
 #include "my_malloc.h"
 
 /*
@@ -77,21 +78,15 @@ void cut_block(t_block b, size_t s)
 
 void *calloc(size_t nmemb, size_t size)
 {
-	size_t *block_ptr = malloc(nmemb * size);
+	void *block_ptr = malloc(nmemb * size);
 
-	if (block_ptr) {
-	size_t max = align(nmemb * size) / 4;
-		for (unsigned int i = 0; i < max; ++i)
-			block_ptr[i] = 0;
-	}
+	if (block_ptr)
+		memset(block_ptr, 0, nmemb * size);
 	return (block_ptr);
 }
 
 void *malloc(size_t size)
 {
-	my_putstr("=== MEM AT BEGIN MALLOC ===\n");
-	show_alloc_mem();
-	my_putstr("=== MEM AT BEGIN MALLOC ===\n");
 	t_block alloc;
 	t_block list = base_list_g;
 	size = align(size);
@@ -110,12 +105,5 @@ void *malloc(size_t size)
 		alloc = extend_heap_usage(NULL, size);
 		base_list_g = alloc;
 	}
-	my_putstr("=== MEM AT END MALLOC ===\n");
-	show_alloc_mem();
-	my_putstr("=== MEM AT END MALLOC ===\n");
-	my_putstr("return this address by malloc : ");
-	print_address_in_hexa(
-		(unsigned long long int)((void *)alloc + BLOCK_SIZE));
-	my_putstr("\n");
 	return ((void *)alloc + BLOCK_SIZE);
 }

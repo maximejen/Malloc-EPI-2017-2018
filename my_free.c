@@ -45,40 +45,16 @@ t_block get_block(void *ptr)
 
 void free(void *ptr)
 {
-	my_putstr("Enter the free function\n");
-	my_putstr("=== MEM AT BEGIN FREE ===\n");
-	show_alloc_mem();
-	my_putstr("=== MEM AT BEGIN FREE ===\n");
 	t_block tmp;
 
-	my_putstr("asked ptr : ");
-	print_address_in_hexa((unsigned long long int)ptr);
-	my_putstr("\n");
 	if (ptr == NULL || !valid_ptr(ptr))
 		return;
-	my_putstr("ptr is valid\n");
 	tmp = get_block(ptr);
-	my_putstr("header found : ");
-	print_address_in_hexa((unsigned long long int)tmp);
-	my_putstr("\n");
-	print_address_in_hexa((unsigned long long int)tmp->prev);
-	my_putstr("we have the block now\n");
 	tmp->free = 1;
-	my_putstr("tmp->free is now set to 1\n");
-	if (tmp->prev && tmp->prev->free) {
-		my_putstr("try to merge prev block\n");
+	if (tmp->prev && tmp->prev->free)
 		tmp = merge_block(tmp->prev);
-	}
-	my_putstr("prev if passed\n");
-	if (tmp->next) {
-		my_putstr("try to merge next block\n");
+	if (tmp->next)
 		tmp = merge_block(tmp);
-	}
-	else {
-		my_putstr("end of Heap\n");
+	else
 		end_of_the_heap(tmp);
-	}
-	my_putstr("=== MEM AT END FREE ===\n");
-	show_alloc_mem();
-	my_putstr("=== MEM AT END FREE ===\n");
 }
