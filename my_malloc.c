@@ -66,14 +66,16 @@ t_block extend_heap_usage(t_block list, size_t s)
 
 void cut_block(t_block b, size_t s)
 {
-	t_block free_space;
-	free_space = (t_block)((void *)b + BLOCK_SIZE + s);
-	free_space->next = b->next;
-	free_space->prev = b;
-	b->next = free_space;
-	free_space->size = b->size - BLOCK_SIZE - s;
-	free_space->free = 1;
-	b->size = s;
+	if (b->size - s >= MINSIZE) {
+		t_block free_space;
+		free_space = (t_block)((void *)b + BLOCK_SIZE + s);
+		free_space->next = b->next;
+		free_space->prev = b;
+		b->next = free_space;
+		free_space->size = b->size - BLOCK_SIZE - s;
+		free_space->free = 1;
+		b->size = s;
+	}
 }
 
 void *calloc(size_t nmemb, size_t size)
@@ -90,16 +92,15 @@ void *malloc(size_t size)
 	t_block alloc;
 	t_block list = base_list_g;
 	size = align(size);
+
 	if (list != NULL) {
 		alloc = find_block(&list, size);
 		if (alloc != NULL) {
-			if (alloc->size - size >= MINSIZE)
-				cut_block(alloc, size);
+			cut_block(alloc, size);
 			alloc->free = 0;
 		} else {
 			alloc = extend_heap_usage(list, size);
-			if (!alloc)
-				return (NULL);
+			return (!alloc ? NULL : ((void *)alloc + BLOCK_SIZE));
 		}
 	} else {
 		alloc = extend_heap_usage(NULL, size);
