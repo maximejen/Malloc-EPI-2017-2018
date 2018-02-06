@@ -10,6 +10,8 @@
 
 int print_address_in_hexa(unsigned long long int ptr)
 {
+	my_putnbr(ptr);
+	return 0;
 	unsigned long nbr2;
 	char nbrc;
 	int size = 0;
@@ -56,14 +58,17 @@ void show_alloc_mem()
 	print_address_in_hexa((unsigned long long int)breakPoint);
 	my_putstr("\n");
 	while (tmp) {
+		my_putstr("0x");
+		print_address_in_hexa((size_t)tmp + BLOCK_SIZE);
+		my_putstr(" - 0x");
+		print_address_in_hexa((size_t)tmp + BLOCK_SIZE + tmp->size);
+		my_putstr(" : ");
+		my_putnbr((long long int)tmp->size);
 		if (tmp->free == 0) {
-			my_putstr("0x");
-			print_address_in_hexa((size_t)tmp + BLOCK_SIZE);
-			my_putstr(" - 0x");
-			print_address_in_hexa((size_t)tmp + BLOCK_SIZE + tmp->size);
-			my_putstr(" : ");
-			my_putnbr((long long int)tmp->size);
 			my_putstr(" bytes\n");
+		}
+		else {
+			my_putstr(" freed bytes\n");
 		}
 		tmp = tmp->next;
 	}

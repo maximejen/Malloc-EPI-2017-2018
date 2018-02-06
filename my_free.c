@@ -8,7 +8,7 @@
 #include <zconf.h>
 #include "my_malloc.h"
 
-static t_block merge_block(t_block ptr)
+t_block merge_block(t_block ptr)
 {
 	if (ptr->next && ptr->next->free == 1) {
 		ptr->size += BLOCK_SIZE + ptr->next->size;
@@ -28,7 +28,7 @@ int valid_ptr(void *ptr)
 	return (res);
 }
 
-static void end_of_the_heap(t_block ptr)
+void end_of_the_heap(t_block ptr)
 {
 	if (!ptr->prev)
 		base_list_g = NULL;
@@ -43,7 +43,7 @@ t_block get_block(void *ptr)
 	return (tmp);
 }
 
-void free(void *ptr)
+void intern_free(void *ptr)
 {
 	t_block tmp;
 

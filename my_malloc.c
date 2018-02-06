@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <zconf.h>
+#include <pthread.h>
 #include <string.h>
 #include "my_malloc.h"
 
@@ -53,7 +54,7 @@ t_block find_block(t_block *last, size_t size)
 t_block extend_heap_usage(t_block list, size_t s)
 {
 	t_block block = sbrk(0);
-	if (sbrk(BLOCK_SIZE + s) == (void *)-1)
+	if (sbrk(alignPageSize(BLOCK_SIZE + s)) == (void *)-1)
 		return (NULL);
 	block->size = s;
 	block->next = NULL;
@@ -78,16 +79,16 @@ void cut_block(t_block b, size_t s)
 	}
 }
 
-void *calloc(size_t nmemb, size_t size)
+void *intern_calloc(size_t nmemb, size_t size)
 {
-	void *block_ptr = malloc(nmemb * size);
+	void *block_ptr = intern_malloc(nmemb * size);
 
 	if (block_ptr)
 		memset(block_ptr, 0, nmemb * size);
 	return (block_ptr);
 }
 
-void *malloc(size_t size)
+void *intern_malloc(size_t size)
 {
 	t_block alloc;
 	t_block list = base_list_g;
@@ -98,13 +99,11 @@ void *malloc(size_t size)
 		if (alloc != NULL) {
 			cut_block(alloc, size);
 			alloc->free = 0;
-		} else {
+		} else
 			alloc = extend_heap_usage(list, size);
-			return (!alloc ? NULL : ((void *)alloc + BLOCK_SIZE));
-		}
 	} else {
 		alloc = extend_heap_usage(NULL, size);
 		base_list_g = alloc;
 	}
-	return ((void *)alloc + BLOCK_SIZE);
+	return (!alloc ? NULL : ((void *)alloc + BLOCK_SIZE));;
 }

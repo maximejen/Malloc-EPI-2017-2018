@@ -27,20 +27,20 @@ void valid_ptr_case(void **ret, void *ptr, size_t size)
 		cut_block(b, align(size));
 		*ret = (void *)b + BLOCK_SIZE;
 	} else {
-		*ret = malloc(size);
+		*ret = intern_malloc(size);
 		if (*ret) {
 			t_block new = get_block(*ret);
 			copy_block(b, new);
-			free(b);
+			intern_free(b);
 		}
 	}
 }
 
-void *realloc(void *ptr, size_t size)
+void *intern_realloc(void *ptr, size_t size)
 {
 	void *ret = NULL;
 	if (!ptr)
-		ret = malloc(size);
+		ret = intern_malloc(size);
 	else if (valid_ptr(ptr)) {
 		valid_ptr_case(&ret, ptr, size);
 	}
