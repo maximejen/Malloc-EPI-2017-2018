@@ -20,24 +20,29 @@ static void copy_block(t_block src, t_block dest)
 		sdata[i] = ddata[i];
 }
 
+void valid_ptr_case(void **ret, void *ptr, size_t size)
+{
+	t_block b = get_block(ptr);
+	if (b->size >= align(size) && (b->size - size) >= MINSIZE) {
+		cut_block(b, align(size));
+		*ret = (void *)b + BLOCK_SIZE;
+	} else {
+		*ret = malloc(size);
+		if (*ret) {
+			t_block new = get_block(*ret);
+			copy_block(b, new);
+			free(b);
+		}
+	}
+}
+
 void *realloc(void *ptr, size_t size)
 {
 	void *ret = NULL;
 	if (!ptr)
 		ret = malloc(size);
 	else if (valid_ptr(ptr)) {
-		t_block b = get_block(ptr);
-		if (b->size >= align(size) && (b->size - size) >= MINSIZE) {
-			cut_block(b, align(size));
-			ret = (void *)b + BLOCK_SIZE;
-		} else {
-			ret = malloc(size);
-			if (ret) {
-				t_block new = get_block(ret);
-				copy_block(b, new);
-				free(b);
-			}
-		}
+		valid_ptr_case(&ret, ptr, size);
 	}
 	return (ret);
 }

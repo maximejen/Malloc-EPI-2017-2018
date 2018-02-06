@@ -52,25 +52,18 @@ void show_alloc_mem()
 
 	if (!breakPoint)
 		return;
-	my_putstr("break : ");
-	write(1, "0x", 2);
+	my_putstr("break : 0x");
 	print_address_in_hexa((unsigned long long int)breakPoint);
 	my_putstr("\n");
 	while (tmp) {
 		if (tmp->free == 0) {
-			my_putstr("HEADER : ");
-			print_address_in_hexa((unsigned long long int)tmp);
-			my_putstr(" | ");
-			write(1, "0x", 2);
+			my_putstr("0x");
 			print_address_in_hexa((size_t)tmp + BLOCK_SIZE);
-			my_putstr(" - ");
-			write(1, "0x", 2);
+			my_putstr(" - 0x");
 			print_address_in_hexa((size_t)tmp + BLOCK_SIZE + tmp->size);
 			my_putstr(" : ");
 			my_putnbr((long long int)tmp->size);
-			my_putstr(" bytes  |  prev is : ");
-			print_address_in_hexa((unsigned long long int)tmp->prev);
-			my_putstr("\n");
+			my_putstr(" bytes\n");
 		}
 		tmp = tmp->next;
 	}
