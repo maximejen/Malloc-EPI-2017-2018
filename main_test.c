@@ -12,5 +12,6 @@
 int main()
 {
 	char *str = malloc(12);
+	(void)str;
 	return (0);
 }
