@@ -31,7 +31,7 @@ clean:
 	$(RM) $(OBJS)
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) $(TARGET_LIB)
 
 re: fclean all
 
