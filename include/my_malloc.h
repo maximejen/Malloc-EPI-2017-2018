@@ -28,7 +28,7 @@ struct s_block {
 };
 
 t_block find_block(t_block *last, size_t size);
-void show_alloc_mem();
+void show_alloc_mem(void);
 void my_putnbr(long long int nbr);
 void my_putstr(char *str);
 int print_address_in_hexa(unsigned long long int ptr);

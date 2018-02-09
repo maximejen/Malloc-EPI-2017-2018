@@ -13,7 +13,7 @@ static pthread_mutex_t mutex_g = PTHREAD_MUTEX_INITIALIZER;
 
 void *malloc(size_t size)
 {
-	void *ptr;
+	void *ptr = NULL;
 
 	if (pthread_mutex_lock(&mutex_g) != 0)
 		return (NULL);
@@ -34,7 +34,7 @@ void free(void *ptr)
 
 void *realloc(void *ptr, size_t size)
 {
-	void *ptr2;
+	void *ptr2 = NULL;
 
 	if (pthread_mutex_lock(&mutex_g) != 0)
 		return (NULL);
@@ -46,7 +46,7 @@ void *realloc(void *ptr, size_t size)
 
 void *calloc(size_t nmemb, size_t size)
 {
-	void *ptr;
+	void *ptr = NULL;
 
 	if (pthread_mutex_lock(&mutex_g) != 0)
 		return (NULL);

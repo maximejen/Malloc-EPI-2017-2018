@@ -47,7 +47,7 @@ void my_putstr(char *str)
 		write(1, &str[i], 1);
 }
 
-void show_alloc_mem()
+void show_alloc_mem(void)
 {
 	t_block tmp = base_list_g;
 	void *breakPoint = sbrk(0);
